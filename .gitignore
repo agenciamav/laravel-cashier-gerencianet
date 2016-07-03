@@ -1,0 +1,10 @@
+.DS_Store
+.env
+/docs
+/sami/build
+/sami/cache
+/vendor
+composer.lock
+composer.phar
+sami.phar
+Thumbs.db
