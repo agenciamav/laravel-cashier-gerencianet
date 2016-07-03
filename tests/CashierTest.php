@@ -26,13 +26,6 @@ class CashierTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
 
-        // Define the Gerencianet KEYS
-        $this->options = [
-            'client_id'       => getenv('GERENCIANET_CLIENT_ID'),
-            'client_secret'   => getenv('GERENCIANET_CLIENT_SECRET'),
-            'sandbox'         => getenv('GERENCIANET_SANDBOX')
-        ];                    
-
         Eloquent::unguard();
 
         $db = new DB;
@@ -61,7 +54,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
             $table->string('name')->nullable();
             $table->integer('user_id');  
-            $table->integer('subscription_id');     // 1876
+            $table->integer('subscription_id');
             $table->string('status')->default("new");
             $table->string('custom_id')->nullable();
             $table->string('notification_url')->nullable();
@@ -79,23 +72,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
         });
 
-
-        // Create transactions table
-        $this->schema()->create('charges', function ($table) {
-
-            $table->increments('id');
-
-            $table->integer('charge_id');     // 67477
-            $table->integer('user_id');  
-            $table->integer('total');  
-            $table->string('status')->default("new");
-            $table->string('custom_id')->nullable();
-            $table->string('notification_url')->nullable();
-           
-            $table->timestamps();  
-
-        });
-
+        // ------------------------------------------------------
 
         $faker = Faker\Factory::create();        
 
@@ -113,7 +90,6 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
         $this->schema()->drop('users');
         $this->schema()->drop('subscriptions');
-        $this->schema()->drop('charges');
 
     }
 
@@ -124,6 +100,85 @@ class CashierTest extends PHPUnit_Framework_TestCase
     public function test_generic_user()
     {        
         $this->assertEquals( 1, count($this->user) );        
+    }
+
+    public function test_charges()
+    {        
+
+        $user = $this->user;
+        
+        # Creating charges
+
+        $charge = $user->charge( 500 );
+
+        $this->assertEquals( 200,  $charge['code'] );
+        $this->assertEquals( 500,  $charge['data']['total'] );
+        
+        // ----------------------------------------------------------
+
+        $item = [
+            'name' => 'Item 1',
+            'amount' => 2,
+            'value' => 1000
+        ];
+        $charge = $user->charge( $item );
+
+        $this->assertEquals( 200,  $charge['code'] );
+        $this->assertEquals( 2000,  $charge['data']['total'] );
+        
+        // ----------------------------------------------------------
+
+        $items = [
+            [
+                'name' => 'Item 1',
+                'amount' => 1,
+                'value' => 1000
+            ],
+            [
+                'name' => 'Item 2',
+                'amount' => 2,
+                'value' => 2000
+            ]
+        ];
+        $charge = $user->charge( $items );
+
+        $this->assertEquals( 200,  $charge['code'] );
+        $this->assertEquals( 5000,  $charge['data']['total'] );
+
+        // ----------------------------------------------------------
+
+        $faker = Faker\Factory::create();       
+        $faker->addProvider(new \Faker\Provider\Base($faker));
+       
+        $options    = [];
+        $payee_code = $faker->regexify('[a-fA-F0-9]{32}');
+        
+        $options['shippings']   = [
+            [
+                'name' => 'My Shipping',
+                'value' => 2000
+            ],
+            [
+                'name' => 'Shipping to someone else',
+                'value' => 1000,
+                // 'payee_code' => $payee_code
+            ]
+        ];
+        $options['metadata']    = [
+            'custom_id' => 'Product 001',
+            'notification_url' => 'http://127.0.0.1/notification'
+        ];
+        $charge = $user->charge( 500, $options );   
+
+        $this->assertEquals( 200,  $charge['code'] );
+        $this->assertEquals( 3500,  $charge['data']['total'] );
+       
+
+        # Paying a charge
+        # Detailing charges
+        # Updating informations
+        # Resending billet
+        # Adding information to charge's history            
     }
 
     /**
