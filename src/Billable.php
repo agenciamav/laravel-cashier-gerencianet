@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use Laravel\Cashier\GerencianetCharge as Charge;
+// use Laravel\Cashier\GerencianetCharge as Charge;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable
@@ -20,6 +20,7 @@ trait Billable
      */
     public function charge($amount, array $options = [])
     {        
-        return Charge::create($amount, $options);     
+        $charge = new Charge;
+        return $charge->new($amount, $options);     
     }  
 }

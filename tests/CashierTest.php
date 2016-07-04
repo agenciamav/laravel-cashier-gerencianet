@@ -110,9 +110,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
         # Creating charges
 
         $charge = $user->charge( 500 );
-
-        $this->assertEquals( 200,  $charge['code'] );
-        $this->assertEquals( 500,  $charge['data']['total'] );
+        $this->assertEquals( 500,  $charge['total'] );
         
         // ----------------------------------------------------------
 
@@ -123,8 +121,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
         ];
         $charge = $user->charge( $item );
 
-        $this->assertEquals( 200,  $charge['code'] );
-        $this->assertEquals( 2000,  $charge['data']['total'] );
+        $this->assertEquals( 2000,  $charge['total'] );
         
         // ----------------------------------------------------------
 
@@ -142,15 +139,13 @@ class CashierTest extends PHPUnit_Framework_TestCase
         ];
         $charge = $user->charge( $items );
 
-        $this->assertEquals( 200,  $charge['code'] );
-        $this->assertEquals( 5000,  $charge['data']['total'] );
+        $this->assertEquals( 5000,  $charge['total'] );
 
         // ----------------------------------------------------------
 
+        $options = [];
+        
         $faker = Faker\Factory::create();       
-        $faker->addProvider(new \Faker\Provider\Base($faker));
-       
-        $options    = [];
         $payee_code = $faker->regexify('[a-fA-F0-9]{32}');
         
         $options['shippings']   = [
@@ -170,8 +165,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
         ];
         $charge = $user->charge( 500, $options );   
 
-        $this->assertEquals( 200,  $charge['code'] );
-        $this->assertEquals( 3500,  $charge['data']['total'] );
+        $this->assertEquals( 3500, $charge['total'] );
        
 
         # Paying a charge
