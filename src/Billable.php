@@ -11,16 +11,45 @@ use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable
-{           
+{
     /**
      * Make a charge on the customer for the given amount or collection of items.
-     * @param  array|float  $amount     Array of items or single Float value
-     * @param  array        $options    [description]
-     * @return array                    [description]
+     * [charge description]
+     * @param  [type] $amount  [description]
+     * @param  [type] $options [description]
+     * @return [type]          [description]
      */
     public function charge($amount, array $options = [])
-    {        
-        $charge = new Charge;
-        return $charge->new($amount, $options);     
-    }  
+    {
+        $charge = new GerencianetCharge;
+        return $charge->create($amount, $options);    
+    }
+
+    /**
+     * [payCharge description]
+     * @param  [type] $charge_id [description]
+     * @param  [type] $method    [description]
+     * @param  [type] $options   [description]
+     * @return [type]            [description]
+     */
+    public function payCharge($charge_id, $method, array $options = [])
+    {
+        if( !$method || !$charge_id){
+            return "Wrong gateway payment or charge ID";
+        }
+
+        $user = $this->toArray();
+        $charge = new GerencianetCharge;
+        switch ($method) {
+            case 'billet':
+                return $charge->billet( $charge_id, $user, $options );
+                break;
+            case 'card':
+                return $charge->card();
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
 }

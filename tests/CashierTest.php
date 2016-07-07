@@ -20,7 +20,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
         if (file_exists(__DIR__.'/../.env')) {
             $dotenv = new Dotenv\Dotenv(__DIR__.'/../');
             $dotenv->load();
-        }      
+        }
     }
 
     public function setUp()
@@ -41,6 +41,8 @@ class CashierTest extends PHPUnit_Framework_TestCase
             $table->increments('id');
             $table->string('email');
             $table->string('name');
+            $table->string('phone_number')->nullable();
+            $table->biginteger('cpf')->nullable();
             $table->string('gerencianet_id')->nullable();
             $table->string('card_brand')->nullable();
             $table->string('card_last_four')->nullable();
@@ -53,7 +55,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
             $table->increments('id');
 
             $table->string('name')->nullable();
-            $table->integer('user_id');  
+            $table->integer('user_id');
             $table->integer('subscription_id');
             $table->string('status')->default("new");
             $table->string('custom_id')->nullable();
@@ -68,20 +70,24 @@ class CashierTest extends PHPUnit_Framework_TestCase
             $table->datetime('trial_ends_at')->nullable();
             $table->datetime('ends_at')->nullable();
 
-            $table->timestamps();  
+            $table->timestamps();
 
         });
 
         // ------------------------------------------------------
 
-        $faker = Faker\Factory::create();        
+        $faker = Faker\Factory::create('pt_BR');
+
+        $faker->addProvider(new \Faker\Provider\pt_BR\Person($faker));
+        $faker->addProvider(new \Faker\Provider\en_US\PhoneNumber($faker));
 
         $user = User::create([
-                'email' => $faker->email,
-                'name'  => $faker->name,
-            ]);        
+                'email'        => $faker->email,
+                'name'         => $faker->name,
+                'phone_number' => $faker->regexify('[1-9]{2}9?[0-9]{8}'),
+                'cpf'          => $faker->cpf(false)
+            ]);
         $this->user = $user;
-
     }
 
 
@@ -98,43 +104,43 @@ class CashierTest extends PHPUnit_Framework_TestCase
      *  Tests...
      */
     public function test_generic_user()
-    {        
-        $this->assertEquals( 1, count($this->user) );        
+    {
+        $this->assertEquals( 1, count($this->user) );
     }
 
     public function test_charges()
-    {        
+    {
 
         $user = $this->user;
-        
+
         # Creating charges
 
-        $charge = $user->charge( 500 );
+        $charge = $user->charge( 500 );        
         $this->assertEquals( 500,  $charge['total'] );
-        
+
         // ----------------------------------------------------------
 
         $item = [
-            'name' => 'Item 1',
+            'name'   => 'Item 1',
             'amount' => 2,
-            'value' => 1000
+            'value'  => 1000
         ];
         $charge = $user->charge( $item );
 
         $this->assertEquals( 2000,  $charge['total'] );
-        
+
         // ----------------------------------------------------------
 
         $items = [
             [
-                'name' => 'Item 1',
+                'name'   => 'Item 1',
                 'amount' => 1,
-                'value' => 1000
+                'value'  => 1000
             ],
             [
-                'name' => 'Item 2',
+                'name'   => 'Item 2',
                 'amount' => 2,
-                'value' => 2000
+                'value'  => 2000
             ]
         ];
         $charge = $user->charge( $items );
@@ -144,35 +150,53 @@ class CashierTest extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------
 
         $options = [];
-        
-        $faker = Faker\Factory::create();       
+
+        $faker = Faker\Factory::create();
         $payee_code = $faker->regexify('[a-fA-F0-9]{32}');
-        
+
         $options['shippings']   = [
             [
-                'name' => 'My Shipping',
+                'name'  => 'My Shipping',
                 'value' => 2000
             ],
             [
-                'name' => 'Shipping to someone else',
+                'name'  => 'Shipping to someone else',
                 'value' => 1000,
                 // 'payee_code' => $payee_code
             ]
         ];
         $options['metadata']    = [
-            'custom_id' => 'Product 001',
+            'custom_id'        => 'Product 001',
             'notification_url' => 'http://127.0.0.1/notification'
         ];
-        $charge = $user->charge( 500, $options );   
+        $charge = $user->charge( 500, $options );
 
         $this->assertEquals( 3500, $charge['total'] );
-       
+
 
         # Paying a charge
+        $charge = $user->charge( 500 );
+
+            // 1. Billet
+            $options = [
+                'expire_at'    => Carbon::now()->addWeeks(1)->format('Y-m-d'),
+                'instructions' => [
+                        'Pay only with money',
+                        'Do not pay with gold'
+                    ]
+            ];
+            $billet = $user->payCharge( $charge['charge_id'], 'billet', $options);
+
+            $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
+            $this->assertEquals( 500, $billet['total'] );
+            $this->assertEquals( 'waiting', $billet['status'] );
+
+            // 2. Card
+
         # Detailing charges
         # Updating informations
         # Resending billet
-        # Adding information to charge's history            
+        # Adding information to charge's history
     }
 
     /**
