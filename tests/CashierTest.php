@@ -43,6 +43,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
             $table->string('name');
             $table->string('phone_number')->nullable();
             $table->biginteger('cpf')->nullable();
+            $table->date('birth')->nullable();
             $table->string('gerencianet_id')->nullable();
             $table->string('card_brand')->nullable();
             $table->string('card_last_four')->nullable();
@@ -85,7 +86,8 @@ class CashierTest extends PHPUnit_Framework_TestCase
                 'email'        => $faker->email,
                 'name'         => $faker->name,
                 'phone_number' => $faker->regexify('[1-9]{2}9?[0-9]{8}'),
-                'cpf'          => $faker->cpf(false)
+                'cpf'          => $faker->cpf(false),
+                'birth'        => Carbon::now()->subYears(21)->format('Y-m-d')
             ]);
         $this->user = $user;
     }
@@ -115,7 +117,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
         # Creating charges
 
-        $charge = $user->charge( 500 );        
+        $charge = $user->charge( 500 );
         $this->assertEquals( 500,  $charge['total'] );
 
         // ----------------------------------------------------------
@@ -175,7 +177,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
 
         # Paying a charge
-        $charge = $user->charge( 500 );
+            $charge = $user->charge( 500 );
 
             // 1. Billet
             $options = [
@@ -192,6 +194,23 @@ class CashierTest extends PHPUnit_Framework_TestCase
             $this->assertEquals( 'waiting', $billet['status'] );
 
             // 2. Card
+            // $charge = $user->charge( 500 );
+
+            // $payment_token = $this->get_payment_token();
+
+            // $args['credit_card'] = [
+            //         'installments'    => 1,
+            //         'billing_address' => $user->billing_address,
+            //         'payment_token'   => $payment_token
+            //     ];
+            //
+            // $paybycard = $user->payCharge( $charge['charge_id'], 'card', $args);
+            //
+            // $this->assertEquals( 'credit_card', $paybycard['payment'] );
+            // $this->assertEquals( 500, $paybycard['total'] );
+            // $this->assertEquals( 'waiting', $paybycard['status'] );
+            // $this->assertEquals( $paybycard['charge_id'], $charge['charge_id'] );
+
 
         # Detailing charges
         # Updating informations
@@ -210,6 +229,12 @@ class CashierTest extends PHPUnit_Framework_TestCase
     protected function connection()
     {
         return Eloquent::getConnectionResolver()->connection();
+    }
+
+    public function get_payment_token()
+    {
+        // Payment Token needs to be generated from Gerencianet
+        return false;
     }
 }
 

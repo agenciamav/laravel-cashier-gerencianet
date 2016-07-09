@@ -12,6 +12,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable
 {
+
+    public $billing_address = [
+        'street'       => 'Av. JK',
+        'number'       => 909,
+        'neighborhood' => 'Bauxita',
+        'zipcode'      => '35400000',
+        'city'         => 'Ouro Preto',
+        'state'        => 'MG',
+    ];
+
     /**
      * Make a charge on the customer for the given amount or collection of items.
      * [charge description]
@@ -22,7 +32,7 @@ trait Billable
     public function charge($amount, array $options = [])
     {
         $charge = new GerencianetCharge;
-        return $charge->create($amount, $options);    
+        return $charge->create($amount, $options);
     }
 
     /**
@@ -45,7 +55,7 @@ trait Billable
                 return $charge->billet( $charge_id, $user, $options );
                 break;
             case 'card':
-                return $charge->card();
+                return $charge->card( $charge_id, $user, $options );
                 break;
             default:
                 # code...

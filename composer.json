@@ -17,7 +17,8 @@
         "dompdf/dompdf": "^0.6.1",
         "nesbot/carbon": "~1.0",
         "symfony/http-kernel": "~2.7|~3.0",
-        "fzaninotto/faker": "^1.6"
+        "fzaninotto/faker": "^1.6",
+        "jonnyw/php-phantomjs": "4.*"
     },
     "require-dev": {
         "illuminate/routing": "~5.1",
@@ -37,5 +38,16 @@
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
-    }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ],
+        "post-update-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ]
+    },
+    "config": {
+       "bin-dir": "bin"
+   }
 }

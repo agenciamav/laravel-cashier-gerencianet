@@ -44,8 +44,45 @@ class GerencianetCharge extends GerencianetApiService
 
 	}
 
-	public function card (){
-		return "Paying with card...";
+	public function card ($charge_id, $user, $options){
+		$params = ['id' => $charge_id];
+
+		$user_schema  = ['email', 'name', 'phone_number', 'cpf', 'birth'];
+		$user         = array_intersect_key( $user, array_flip($user_schema) );
+		if( !isset($options['credit_card']['payment_token']) ){
+			return "Needs cards data";
+		}
+		$options['credit_card']['customer']      = $user;
+		$options['credit_card']['installments']  = 1;
+
+		$paymentToken = $options['credit_card']['payment_token'];
+
+		$billingAddress_schema = ['street','number','neighborhood','zipcode','city','state'];
+		$billingAddress        = array_intersect_key( $options['credit_card']['billing_address'], array_flip($billingAddress_schema) );
+
+		$credit_card_schema = ['installments','billing_address','payment_token','customer'];
+		$credit_card        = array_intersect_key( $options['credit_card'], array_flip($credit_card_schema) );
+
+		$body = [
+		    'payment' => [
+		        'credit_card' => $credit_card
+		    ]
+		];
+
+		try {
+		    $charge = self::$api->payCharge($params, $body);
+			if( $charge && $charge['code'] == 200 ){
+				return $charge['data'];
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+		    	'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+		    return $e->getMessage();
+		}
 	}
 
 	public function create($amount, $options){
