@@ -118,7 +118,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
         # Creating charges
 
         $charge = $user->charge( 500 );
-        $this->assertEquals( 500,  $charge['total'] );
+        $this->assertEquals( 500, @$charge['total'] );
 
         // ----------------------------------------------------------
 
@@ -128,8 +128,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
             'value'  => 1000
         ];
         $charge = $user->charge( $item );
-
-        $this->assertEquals( 2000,  $charge['total'] );
+        $this->assertEquals( 2000, @$charge['total'] );
 
         // ----------------------------------------------------------
 
@@ -146,8 +145,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
             ]
         ];
         $charge = $user->charge( $items );
-
-        $this->assertEquals( 5000,  $charge['total'] );
+        $this->assertEquals( 5000, @$charge['total'] );
 
         // ----------------------------------------------------------
 
@@ -173,13 +171,24 @@ class CashierTest extends PHPUnit_Framework_TestCase
         ];
         $charge = $user->charge( 500, $options );
 
-        $this->assertEquals( 3500, $charge['total'] );
+        $this->assertEquals( 3500, @$charge['total'] );
 
 
         # Paying a charge
-            $charge = $user->charge( 500 );
-
             // 1. Billet
+            $charge = $user->charge( 500 );
+            $billet = $user->payCharge( $charge['charge_id'], 'billet');
+
+            print_r( $billet );
+
+            
+
+            $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
+            $this->assertEquals( 500, @$billet['total'] );
+            $this->assertEquals( 'waiting', @$billet['status'] );
+
+
+            $charge = $user->charge( 500 );
             $options = [
                 'expire_at'    => Carbon::now()->addWeeks(1)->format('Y-m-d'),
                 'instructions' => [
@@ -190,8 +199,8 @@ class CashierTest extends PHPUnit_Framework_TestCase
             $billet = $user->payCharge( $charge['charge_id'], 'billet', $options);
 
             $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
-            $this->assertEquals( 500, $billet['total'] );
-            $this->assertEquals( 'waiting', $billet['status'] );
+            $this->assertEquals( 500, @$billet['total'] );
+            $this->assertEquals( 'waiting', @$billet['status'] );
 
             // 2. Card
             // $charge = $user->charge( 500 );
@@ -213,6 +222,18 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
 
         # Detailing charges
+        $charge = $user->charge( 500 );
+
+        $chargeDetails = $user->getCharge( $charge['charge_id'] );
+
+        $this->assertEquals( 'new', $chargeDetails['status'] );
+
+        $billet = $user->payCharge( $charge['charge_id'], 'billet');
+
+        $chargeDetails = $user->getCharge( $billet['charge_id'] );
+
+        $this->assertEquals( 'waiting', $chargeDetails['status'] );
+
         # Updating informations
         # Resending billet
         # Adding information to charge's history

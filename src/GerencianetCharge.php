@@ -6,19 +6,23 @@ use Exception;
 use InvalidArgumentException;
 use Gerencianet\Exception\GerencianetException;
 use Laravel\Cashier\Services\GerencianetApiService;
+use Carbon\Carbon;
 
 class GerencianetCharge extends GerencianetApiService
 {
 
 	//
 	public function billet($charge_id, $user, $options){
-		$params      = ['id' => $charge_id];
+		$params               = ['id' => $charge_id];
 
-        $user_schema = ['email', 'name', 'phone_number', 'cpf'];
-        $user        = array_intersect_key( $user, array_flip($user_schema) );
+        $user_schema          = ['email', 'name', 'phone_number', 'cpf'];
+        $user                 = array_intersect_key( $user, array_flip($user_schema) );
 
-		$options     = array_merge(['customer' => $user], $options);
-		$body        = [
+		$expire_at            = Carbon::now()->addWeeks(1)->format('Y-m-d');
+		$options['expire_at'] = (isset($options['expire_at'])) ? $options['expire_at'] : $expire_at;
+
+		$options              = array_merge(['customer' => $user], $options);
+		$body                 = [
 		    'payment' => [
 		        'banking_billet' => $options
 		    ]
@@ -151,8 +155,22 @@ class GerencianetCharge extends GerencianetApiService
 
 	}
 
-	public function detail(){
-
+	public function detail($id){
+		$params = ['id' => $id];
+		try {
+			$charge = self::$api->detailCharge($params, []);
+			if( $charge && $charge['code'] == 200 ){
+				return $charge['data'];
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
 	}
 
 	public function resendBillet (){

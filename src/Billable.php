@@ -62,4 +62,10 @@ trait Billable
                 break;
         }
     }
+
+    public function getCharge($id)
+    {
+        $charge = new GerencianetCharge;
+        return $charge->detail($id);
+    }
 }
