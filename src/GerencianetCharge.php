@@ -137,7 +137,7 @@ class GerencianetCharge extends GerencianetApiService
 		try {
 			$charge = self::$api->createCharge([], $body);
 			if( $charge && $charge['code'] == 200 ){
-				return $charge['data'];
+				return self::detail( $charge['data']['charge_id'] );
 			}
 		} catch (GerencianetException $e) {
 			return [
@@ -185,8 +185,23 @@ class GerencianetCharge extends GerencianetApiService
 
 	}
 
-	public function updateMetadata (){
+	public function updateMetadata ($id, $options){
+		$params = ['id' => $id];
 
+		try {
+		    $charge = self::$api->updateChargeMetadata($params, $options);
+			if( $charge['code'] == 200 ){
+				return self::detail( $id );
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
 	}
 
 }
