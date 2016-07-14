@@ -86,4 +86,10 @@ trait Billable
     $charge = new GerencianetCharge;
     return $charge->createChargeHistory($id, $description);
   }
+
+  public function cancelCharge( $id )
+  {
+    $charge = new GerencianetCharge;
+    return $charge->cancel($id);
+  }
 }

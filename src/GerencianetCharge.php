@@ -47,18 +47,18 @@ class GerencianetCharge extends GerencianetApiService
 	public function cancel ($id){
 		$params = ['id' => $id];
 		try {
-		    $charge = seld::$api->cancelCharge($params, []);
-				if( $charge && $charge['code'] == 200 ){
-					return $charge;
-				}
+		    $charge = self::$api->cancelCharge($params, []);
+			if( $charge && $charge['code'] == 200 ){
+				return self::detail( $id );
+			}
 		} catch (GerencianetException $e) {
-				return [
-				'code'        => $e->code,
-					'error'       => $e->error,
-				'description' => $e->errorDescription
-			];
+			return [
+			'code'        => $e->code,
+				'error'       => $e->error,
+			'description' => $e->errorDescription
+		];
 		} catch (Exception $e) {
-				return $e->getMessage();
+			return $e->getMessage();
 		}
 	}
 

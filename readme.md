@@ -14,12 +14,12 @@
 
 #### Charge
 - [x] billet
-- [ ] cancel
+- [x] cancel
 - [x] card
 - [x] create
-- [ ] createChargeHistory
+- [x] createChargeHistory
 - [x] detail
-- [ ] resendBillet
+- [x] resendBillet
 - [x] shipping
 - [ ] updateBillet
 - [x] updateMetadata

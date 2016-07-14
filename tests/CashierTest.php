@@ -292,6 +292,16 @@ class CashierTest extends PHPUnit_Framework_TestCase
         $this->assertEquals( $charge['history'][1]['message'], "Info to be added to charges history" );
     }
 
+    # Canceling a charge
+    public function test_cancel_charge()
+    {
+        $charge = $this->user->charge( 500 );
+        $this->assertEquals( $charge['status'], 'new' );
+
+        $charge = $this->user->cancelCharge( $charge['charge_id'] );
+        $this->assertEquals( $charge['status'], 'canceled' );
+    }
+
     /**
     * Schema Helpers.
     */
