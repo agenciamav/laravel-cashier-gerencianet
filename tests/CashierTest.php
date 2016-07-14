@@ -32,7 +32,7 @@ class CashierTest extends PHPUnit_Framework_TestCase
         $db->addConnection([
             'driver' => 'sqlite',
             'database' => ':memory:',
-            ]);
+        ]);
         $db->bootEloquent();
         $db->setAsGlobal();
 
@@ -83,12 +83,12 @@ class CashierTest extends PHPUnit_Framework_TestCase
         $faker->addProvider(new \Faker\Provider\en_US\PhoneNumber($faker));
 
         $user = User::create([
-                'email'        => $faker->email,
-                'name'         => $faker->name,
-                'phone_number' => $faker->regexify('[1-9]{2}9?[0-9]{8}'),
-                'cpf'          => $faker->cpf(false),
-                'birth'        => Carbon::now()->subYears(21)->format('Y-m-d')
-            ]);
+            'email'        => $faker->email,
+            'name'         => $faker->name,
+            'phone_number' => $faker->regexify('[1-9]{2}9?[0-9]{8}'),
+            'cpf'          => $faker->cpf(false),
+            'birth'        => Carbon::now()->subYears(21)->format('Y-m-d')
+        ]);
         $this->user = $user;
     }
 
@@ -103,8 +103,8 @@ class CashierTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     *  Tests...
-     */
+    *  Tests...
+    */
     public function test_generic_user()
     {
         $this->assertEquals( 1, count($this->user) );
@@ -161,11 +161,11 @@ class CashierTest extends PHPUnit_Framework_TestCase
         $options = [];
         $options['shippings'] = [
             ['name'  => 'My Shipping', 'value' => 2000],
-            ['name'  => 'Shipping to someone else', 'value' => 1000, /* 'payee_code' => $payee_code */ ]
-        ];
-        $options['metadata']    = [
-            'custom_id'        => 'Product 001',
-            'notification_url' => 'http://127.0.0.1/notification'
+        ['name'  => 'Shipping to someone else', 'value' => 1000, /* 'payee_code' => $payee_code */ ]
+    ];
+    $options['metadata']    = [
+        'custom_id'        => 'Product 001',
+        'notification_url' => 'http://127.0.0.1/notification'
         ];
         $charge = $this->user->charge( 500, $options );
 
@@ -177,28 +177,28 @@ class CashierTest extends PHPUnit_Framework_TestCase
     {
 
         # Paying a charge
-            // 1. Billet
-            $charge = $this->user->charge( 500 );
-            $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
+        // 1. Billet
+        $charge = $this->user->charge( 500 );
+        $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
 
-            $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
-            $this->assertEquals( 500, @$billet['total'] );
-            $this->assertEquals( 'waiting', @$billet['status'] );
+        $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
+        $this->assertEquals( 500, @$billet['total'] );
+        $this->assertEquals( 'waiting', @$billet['status'] );
 
 
-            $charge = $this->user->charge( 500 );
-            $options = [
-                'expire_at'    => Carbon::now()->addWeeks(1)->format('Y-m-d'),
-                'instructions' => [
-                        'Pay only with money',
-                        'Do not pay with gold'
-                    ]
-            ];
-            $billet = $this->user->payCharge( $charge['charge_id'], 'billet', $options);
+        $charge = $this->user->charge( 500 );
+        $options = [
+            'expire_at'    => Carbon::now()->addWeeks(1)->format('Y-m-d'),
+            'instructions' => [
+                'Pay only with money',
+                'Do not pay with gold'
+            ]
+        ];
+        $billet = $this->user->payCharge( $charge['charge_id'], 'billet', $options);
 
-            $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
-            $this->assertEquals( 500, @$billet['total'] );
-            $this->assertEquals( 'waiting', @$billet['status'] );
+        $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
+        $this->assertEquals( 500, @$billet['total'] );
+        $this->assertEquals( 'waiting', @$billet['status'] );
 
     }
 
@@ -254,37 +254,47 @@ class CashierTest extends PHPUnit_Framework_TestCase
         $this->assertEquals( 'Product 001', $charge['custom_id'] );
         $this->assertEquals( 'http://127.0.0.1/notification', $charge['notification_url'] );
 
-            // Change metadata...
+        // Change metadata...
         $newMetadata = [
             'custom_id'        => 'Product 002-beta',
             'notification_url' => 'http://localhost/callback'
         ];
-		$chargeDetails = $this->user->updateCharge( $charge['charge_id'], $newMetadata );
+        $chargeDetails = $this->user->updateCharge( $charge['charge_id'], $newMetadata );
 
         $this->assertEquals( 'new', $chargeDetails['status'] );
         $this->assertEquals( 'Product 002-beta', $chargeDetails['custom_id'] );
         $this->assertEquals( 'http://localhost/callback',  $chargeDetails['notification_url'] );
 
-	}
+    }
 
     # Resending billet
-  public function test_resend_billet()
-  {
-    $charge = $this->user->charge( 500 );
-    $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
+    public function test_resend_billet()
+    {
+        $charge = $this->user->charge( 500 );
+        $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
 
-    $this->assertEquals( 'waiting', $billet['status'] );
+        $this->assertEquals( 'waiting', $billet['status'] );
 
-    # Resend...
-    $newBillet = $this->user->resendBillet( $billet['charge_id'], 'tonetlds@gmail.com');
+        # Resend...
+        $newBillet = $this->user->resendBillet( $billet['charge_id'], 'tonetlds@gmail.com');
 
-    $this->assertTrue( $newBillet );
-  }
+        $this->assertTrue( $newBillet );
+    }
+
     # Adding information to charge's history
+    public function test_create_charge_history()
+    {
+        $charge = $this->user->charge( 500 );
+        $charge = $this->user->createChargeHistory( $charge['charge_id'], "Info to be added to charges history" );
+
+        $this->assertEquals( count( $charge['history'] ), 2 );
+        $this->assertEquals( $charge['history'][0]['message'], "Cobrança criada" );
+        $this->assertEquals( $charge['history'][1]['message'], "Info to be added to charges history" );
+    }
 
     /**
-     * Schema Helpers.
-     */
+    * Schema Helpers.
+    */
     protected function schema()
     {
         return $this->connection()->getSchemaBuilder();

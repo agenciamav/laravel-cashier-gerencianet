@@ -44,8 +44,22 @@ class GerencianetCharge extends GerencianetApiService
 		}
 	}
 
-	public function cancel (){
-
+	public function cancel ($id){
+		$params = ['id' => $id];
+		try {
+		    $charge = seld::$api->cancelCharge($params, []);
+				if( $charge && $charge['code'] == 200 ){
+					return $charge;
+				}
+		} catch (GerencianetException $e) {
+				return [
+				'code'        => $e->code,
+					'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+				return $e->getMessage();
+		}
 	}
 
 	public function card ($charge_id, $user, $options){
@@ -151,8 +165,25 @@ class GerencianetCharge extends GerencianetApiService
 
 	}
 
-	public function createChargeHistory (){
+	public function createChargeHistory ( $id, $description ){
+		$params = ['id' => $id];
 
+		$body = ['description' => $description];
+
+		try {
+		    $charge = self::$api->createChargeHistory($params, $body);
+				if( $charge && $charge['code'] == 200 ){
+					return self::detail( $id );
+				}
+			} catch (GerencianetException $e) {
+				return [
+					'code'        => $e->code,
+					'error'       => $e->error,
+					'description' => $e->errorDescription
+				];
+			} catch (Exception $e) {
+				return $e->getMessage();
+			}
 	}
 
 	public function detail($id){
