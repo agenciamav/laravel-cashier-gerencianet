@@ -21,7 +21,7 @@
 - [x] detail
 - [x] resendBillet
 - [x] shipping
-- [ ] updateBillet
+- [x] updateBillet
 - [x] updateMetadata
 
 #### Extra
