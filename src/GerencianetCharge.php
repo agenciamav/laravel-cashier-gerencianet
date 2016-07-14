@@ -229,8 +229,25 @@ class GerencianetCharge extends GerencianetApiService
 
 	}
 
-	public function updateBillet (){
-
+	public function updateBillet( $id, $new_expire_date ){
+		$params = ['id' => $id];
+		$body = [
+			'expire_at' => $new_expire_date // '2020-12-12'
+		];
+		try {
+		    $charge = self::$api->updateBillet($params, $body);
+			if( $charge['code'] == 200 ){
+				return $charge;
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
 	}
 
 	public function updateMetadata ($id, $options){
