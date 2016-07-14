@@ -173,8 +173,25 @@ class GerencianetCharge extends GerencianetApiService
 		}
 	}
 
-	public function resendBillet (){
+	public function resendBillet ($id, $email){
+		$params = ['id' => $id];
+		$body   = [ 'email' => $email ];
 
+		try {
+		    $response = self::$api->resendBillet($params, $body);
+				if( $response['code'] == 200 ){
+					// return self::detail( $id );
+					return true;
+				}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
 	}
 
 	public function shipping (){

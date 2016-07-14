@@ -105,123 +105,123 @@ class CashierTest extends PHPUnit_Framework_TestCase
     /**
      *  Tests...
      */
-    // public function test_generic_user()
+    public function test_generic_user()
+    {
+        $this->assertEquals( 1, count($this->user) );
+    }
+
+    public function test_charge()
+    {
+
+        // Single charge
+
+        $charge = $this->user->charge( 500 );
+        $this->assertEquals( 500, $charge['total'] );
+    }
+
+    public function test_item_charge()
+    {
+        // Charging a single intem
+
+        $item = [
+            'name'   => 'Item 1',
+            'amount' => 2,
+            'value'  => 1000
+        ];
+        $charge = $this->user->charge( $item );
+        $this->assertEquals( 2000, @$charge['total'] );
+    }
+
+    public function test_multiple_items_charge()
+    {
+
+        $items = [
+            [
+                'name'   => 'Item 1',
+                'amount' => 1,
+                'value'  => 1000
+            ],
+            [
+                'name'   => 'Item 2',
+                'amount' => 2,
+                'value'  => 2000
+            ]
+        ];
+        $charge = $this->user->charge( $items );
+        $this->assertEquals( 5000, @$charge['total'] );
+
+    }
+
+    public function test_charge_metadata()
+    {
+
+        // $faker = Faker\Factory::create();
+        // $payee_code = $faker->regexify('[a-fA-F0-9]{32}');
+
+        $options = [];
+        $options['shippings'] = [
+            ['name'  => 'My Shipping', 'value' => 2000],
+            ['name'  => 'Shipping to someone else', 'value' => 1000, /* 'payee_code' => $payee_code */ ]
+        ];
+        $options['metadata']    = [
+            'custom_id'        => 'Product 001',
+            'notification_url' => 'http://127.0.0.1/notification'
+        ];
+        $charge = $this->user->charge( 500, $options );
+
+        $this->assertEquals( 3500, @$charge['total'] );
+    }
+
+
+    public function test_pay_charge_by_billet()
+    {
+
+        # Paying a charge
+            // 1. Billet
+            $charge = $this->user->charge( 500 );
+            $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
+
+            $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
+            $this->assertEquals( 500, @$billet['total'] );
+            $this->assertEquals( 'waiting', @$billet['status'] );
+
+
+            $charge = $this->user->charge( 500 );
+            $options = [
+                'expire_at'    => Carbon::now()->addWeeks(1)->format('Y-m-d'),
+                'instructions' => [
+                        'Pay only with money',
+                        'Do not pay with gold'
+                    ]
+            ];
+            $billet = $this->user->payCharge( $charge['charge_id'], 'billet', $options);
+
+            $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
+            $this->assertEquals( 500, @$billet['total'] );
+            $this->assertEquals( 'waiting', @$billet['status'] );
+
+    }
+
+    // public function test_pay_charge_by_card()
     // {
-    //     $this->assertEquals( 1, count($this->user) );
+    //         2. Card
+    //         $charge = $user->charge( 500 );
+    //
+    //         $payment_token = $this->get_payment_token();
+    //
+    //         $args['credit_card'] = [
+    //                 'installments'    => 1,
+    //                 'billing_address' => $user->billing_address,
+    //                 'payment_token'   => $payment_token
+    //             ];
+    //
+    //         $paybycard = $user->payCharge( $charge['charge_id'], 'card', $args);
+    //
+    //         $this->assertEquals( 'credit_card', $paybycard['payment'] );
+    //         $this->assertEquals( 500, $paybycard['total'] );
+    //         $this->assertEquals( 'waiting', $paybycard['status'] );
+    //         $this->assertEquals( $paybycard['charge_id'], $charge['charge_id'] );
     // }
-    //
-    // public function test_charge()
-    // {
-    //
-    //     // Single charge
-    //
-    //     $charge = $this->user->charge( 500 );
-    //     $this->assertEquals( 500, $charge['total'] );
-    // }
-    //
-    // public function test_item_charge()
-    // {
-    //     // Charging a single intem
-    //
-    //     $item = [
-    //         'name'   => 'Item 1',
-    //         'amount' => 2,
-    //         'value'  => 1000
-    //     ];
-    //     $charge = $this->user->charge( $item );
-    //     $this->assertEquals( 2000, @$charge['total'] );
-    // }
-    //
-    // public function test_multiple_items_charge()
-    // {
-    //
-    //     $items = [
-    //         [
-    //             'name'   => 'Item 1',
-    //             'amount' => 1,
-    //             'value'  => 1000
-    //         ],
-    //         [
-    //             'name'   => 'Item 2',
-    //             'amount' => 2,
-    //             'value'  => 2000
-    //         ]
-    //     ];
-    //     $charge = $this->user->charge( $items );
-    //     $this->assertEquals( 5000, @$charge['total'] );
-    //
-    // }
-    //
-    // public function test_charge_metadata()
-    // {
-    //
-    //     // $faker = Faker\Factory::create();
-    //     // $payee_code = $faker->regexify('[a-fA-F0-9]{32}');
-    //
-    //     $options = [];
-    //     $options['shippings'] = [
-    //         ['name'  => 'My Shipping', 'value' => 2000],
-    //         ['name'  => 'Shipping to someone else', 'value' => 1000, /* 'payee_code' => $payee_code */ ]
-    //     ];
-    //     $options['metadata']    = [
-    //         'custom_id'        => 'Product 001',
-    //         'notification_url' => 'http://127.0.0.1/notification'
-    //     ];
-    //     $charge = $this->user->charge( 500, $options );
-    //
-    //     $this->assertEquals( 3500, @$charge['total'] );
-    // }
-    //
-    //
-    // public function test_pay_charge_by_billet()
-    // {
-    //
-    //     # Paying a charge
-    //         // 1. Billet
-    //         $charge = $this->user->charge( 500 );
-    //         $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
-    //
-    //         $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
-    //         $this->assertEquals( 500, @$billet['total'] );
-    //         $this->assertEquals( 'waiting', @$billet['status'] );
-    //
-    //
-    //         $charge = $this->user->charge( 500 );
-    //         $options = [
-    //             'expire_at'    => Carbon::now()->addWeeks(1)->format('Y-m-d'),
-    //             'instructions' => [
-    //                     'Pay only with money',
-    //                     'Do not pay with gold'
-    //                 ]
-    //         ];
-    //         $billet = $this->user->payCharge( $charge['charge_id'], 'billet', $options);
-    //
-    //         $this->assertTrue( isset($billet['barcode']) && $billet['barcode'] !== NULL );
-    //         $this->assertEquals( 500, @$billet['total'] );
-    //         $this->assertEquals( 'waiting', @$billet['status'] );
-    //
-    // }
-    //
-    // // public function test_pay_charge_by_card()
-    // // {
-    // //         2. Card
-    // //         $charge = $user->charge( 500 );
-    // //
-    // //         $payment_token = $this->get_payment_token();
-    // //
-    // //         $args['credit_card'] = [
-    // //                 'installments'    => 1,
-    // //                 'billing_address' => $user->billing_address,
-    // //                 'payment_token'   => $payment_token
-    // //             ];
-    // //
-    // //         $paybycard = $user->payCharge( $charge['charge_id'], 'card', $args);
-    // //
-    // //         $this->assertEquals( 'credit_card', $paybycard['payment'] );
-    // //         $this->assertEquals( 500, $paybycard['total'] );
-    // //         $this->assertEquals( 'waiting', $paybycard['status'] );
-    // //         $this->assertEquals( $paybycard['charge_id'], $charge['charge_id'] );
-    // // }
 
 
     public function test_charge_details()
@@ -268,6 +268,18 @@ class CashierTest extends PHPUnit_Framework_TestCase
 	}
 
     # Resending billet
+  public function test_resend_billet()
+  {
+    $charge = $this->user->charge( 500 );
+    $billet = $this->user->payCharge( $charge['charge_id'], 'billet');
+
+    $this->assertEquals( 'waiting', $billet['status'] );
+
+    # Resend...
+    $newBillet = $this->user->resendBillet( $billet['charge_id'], 'tonetlds@gmail.com');
+
+    $this->assertTrue( $newBillet );
+  }
     # Adding information to charge's history
 
     /**

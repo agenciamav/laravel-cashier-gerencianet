@@ -74,4 +74,10 @@ trait Billable
         $charge = new GerencianetCharge;
         return $charge->updateMetadata($id, $options);
     }
+
+    public function resendBillet($id, $options = [])
+    {
+        $charge = new GerencianetCharge;
+        return $charge->resendBillet($id, $options);
+    }
 }
