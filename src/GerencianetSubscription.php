@@ -5,19 +5,45 @@ namespace Laravel\Cashier;
 use Exception;
 use Laravel\Cashier\Services\GerencianetApiService;
 
-class GerencianetSubscriptionService extends GerencianetApiService
-{	
-	
+class GerencianetSubscription extends GerencianetApiService
+{
+
 	/**
 	 * Create a plan
 	 * @param  [type] $params [description]
 	 * @return [type]         [description]
 	 */
 	public function createPlan($params)
-	{		
-		$plan = $this->api->createPlan([], $params);
-		return $plan;
-		
+	{
+		if( isset($params[0]) && is_array( $params[0] ) ){
+			$plans = [];
+			foreach ($params as $p) {
+				$plans[] = self::createPlan( $p );
+			}
+			return $plans;
+		}
+
+		$params = array_merge(array(
+			"name"     => "",
+			"interval" => 1,
+			"repeats"  => null
+		), $params);
+
+		try {
+			$plan = self::$api->createPlan([], $params);
+			if( isset($plan['code']) && $plan['code'] == 200 ){
+				return $plan['data'];
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
+
 	}
 
 	/**
@@ -27,12 +53,11 @@ class GerencianetSubscriptionService extends GerencianetApiService
 	 */
 	public function deletePlan($id)
 	{
-		$params = ['id' => $id];
-				
-		$plan = $this->api->deletePlan($params, []);
-		print_r( $plan );
-		return $plan;
-
+		// $params = ['id' => $id];
+		//
+		// $plan = $this->api->deletePlan($params, []);
+		// print_r( $plan );
+		// return $plan;
 	}
 
 	/**
@@ -40,56 +65,33 @@ class GerencianetSubscriptionService extends GerencianetApiService
 	 * @param  [type] $params [description]
 	 * @return [type]         [description]
 	 */
-	public function listPlans($limit = 20, $offset = 0)
+	public function listPlans($search = "", $limit = 40, $offset = 0)
 	{
-		$params = [$limit, $offset];
-	    
-	    $plans = $this->api->getPlans($params, []);
-
-	    return $plans;
+		$params = ["name" => $search, "limit" => $limit, "offset" => $offset];
+		try {
+			$plans = self::$api->getPlans($params, []);
+			if( isset($plans['code']) && $plans['code'] == 200 ){
+				return $plans['data'];
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
 	}
 
-    /**
-     * Get the Gerencianet plan that has the given ID or Name.
-     *
-     * @param  string  $id
-     * @return \Gerencianet\Plan
-     */
-    public function findPlan($string)
-    {    	
-    	$plans = $this->getPlans();  
-
-    	$string = (Array)$string;  	    	
-
-    	foreach ($plans['data'] as $plan) {    		
-    		
-    		if( is_array($string) && in_array($plan['name'], $string) || in_array($plan['plan_id'], $string) ){
-    			$reponse[] = $plan;
-    		} 
-
-			if( $plan['name'] === $string || $plan['plan_id'] === intval($string) ){
-    			return $plan;
-    		} 
-    	}   
-
-    	if( @$reponse ){
-    		return ( count($reponse) == 1) ? $reponse[0] : $reponse;
-    	}
-
-    	return false;
-
-    }
-
-
-    
     public function createSubscription($plan_id, $items, $user, $name)
     {
   		$params = ['id' => $plan_id ];
-		
+
 		$body = [
 			'items' => $items
 		];
-	    
+
 	    $subscription 	= $this->api->createSubscription($params, $body);
 
 		$subscription 	= $subscription['data'];
@@ -109,19 +111,19 @@ class GerencianetSubscriptionService extends GerencianetApiService
 		return $newSubscription->create([
 								    	"name" 				=> $name,
 								    	"user_id"        	=> $user->id,
-									    "subscription_id" 	=> $subscription['subscription_id'],    
+									    "subscription_id" 	=> $subscription['subscription_id'],
 									    "status" 			=> "new",
 									    "custom_id" 		=> null,
 									    "notification_url" 	=> null,
 									    "payment_method"	=> null,
 									    "next_execution"	=> null,
-									    "next_expire_at" 	=> null,    
-									    "plan_id" 			=> $plan_id,    
+									    "next_expire_at" 	=> null,
+									    "plan_id" 			=> $plan_id,
 									    "occurrences" 		=> 0,
 									    // local
 									    'trial_ends_at' => $trialEndsAt,
 			        					'ends_at' 		=> null,
-			        				]);		
+			        				]);
 
     }
 
@@ -129,7 +131,7 @@ class GerencianetSubscriptionService extends GerencianetApiService
     public function cancelSubscription( $id )
     {
     	$params = ['id' => $id];
-	    return $this->api->cancelSubscription($params, []);	    
+	    return $this->api->cancelSubscription($params, []);
     }
 
     public function detailSubscription( $id )
@@ -140,12 +142,12 @@ class GerencianetSubscriptionService extends GerencianetApiService
 
     public function paySubscription()
     {
-    	
+
     }
 
     public function updateSubscriptionMetadata()
     {
-    	
+
     }
 
 }

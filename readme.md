@@ -31,11 +31,11 @@
 - [ ] detail
 
 #### Subscription
-- [ ] cancelSubscription
 - [ ] createPlan
-- [ ] createSubscription
-- [ ] deletePlan
-- [ ] detailSubscription
 - [ ] listPlans
-- [ ] paySubscription
+- [ ] deletePlan
+- [ ] createSubscription
+- [ ] detailSubscription
 - [ ] updateSubscriptioMetadata
+- [ ] cancelSubscription
+- [ ] paySubscription
