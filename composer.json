@@ -33,6 +33,11 @@
             "Laravel\\Cashier\\": "src/"
         }
     },
+    "autoload-dev": {
+        "classmap": [
+            "tests/Traits/"
+        ]
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
