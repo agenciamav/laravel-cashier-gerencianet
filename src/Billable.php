@@ -99,4 +99,10 @@ trait Billable
         $charge = new GerencianetCharge;
         return $charge->updateBillet( $id, $new_date );
     }
+
+    public function newSubscription( $plan, $items )
+    {
+        $charge = new GerencianetSubscription;
+        return $charge->createSubscription( $plan, $items, $this->id );
+    }
 }

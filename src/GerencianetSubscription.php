@@ -100,6 +100,23 @@ class GerencianetSubscription extends GerencianetApiService
 		}
 	}
 
+	public function getPlan($search)
+	{
+		if( $search == null || empty($search) ){
+			return "Error. Please provide the name or id of plan.";
+		}
+
+		$plans = self::listPlans();
+		foreach ($plans as $plan) {
+			if( is_string($search) && $plan['name'] == $search ){
+				return $plan;
+			}
+			if( is_int($search) && $plan['plan_id'] == $search ){
+				return $plan;
+			}
+		}
+	}
+
 
 	/**
 	 * [createSubscription description]
@@ -109,46 +126,63 @@ class GerencianetSubscription extends GerencianetApiService
 	 * @param  [type] $name    [description]
 	 * @return [type]          [description]
 	 */
-	public function createSubscription($plan_id, $items, $user, $name)
+	public function createSubscription($plan_id, $items, $user_id)
     {
-  // 		$params = ['id' => $plan_id ];
-		//
-		// $body = [
-		// 	'items' => $items
-		// ];
-		//
-	    // $subscription 	= $this->api->createSubscription($params, $body);
-		//
-		// $subscription 	= $subscription['data'];
-		//
-		// if( ! $subscription ){
-		// 	return false;
-		// }
-		//
-		// $newSubscription = new Subscription;
-		//
-		// if ($newSubscription->skipTrial) {
-        //     $trialEndsAt = null;
-        // } else {
-        //     $trialEndsAt = $newSubscription->trialDays ? Carbon::now()->addDays($newSubscription->trialDays) : null;
-        // }
-		//
-		// return $newSubscription->create([
-		// 						    	"name" 				=> $name,
-		// 						    	"user_id"        	=> $user->id,
-		// 							    "subscription_id" 	=> $subscription['subscription_id'],
-		// 							    "status" 			=> "new",
-		// 							    "custom_id" 		=> null,
-		// 							    "notification_url" 	=> null,
-		// 							    "payment_method"	=> null,
-		// 							    "next_execution"	=> null,
-		// 							    "next_expire_at" 	=> null,
-		// 							    "plan_id" 			=> $plan_id,
-		// 							    "occurrences" 		=> 0,
-		// 							    // local
-		// 							    'trial_ends_at' => $trialEndsAt,
-		// 	        					'ends_at' 		=> null,
-		// 	        				]);
+		if( $plan_id == null || empty($plan_id) || empty($items) || empty($user_id) ){
+			return "Error. Please provide the name or id of plan.";
+		}
+
+		$plan = self::getPlan($plan_id);
+
+		if( !isset($plan['plan_id']) ){
+			return "Error. Plan not found!";
+		}
+
+  		$params = ['id' => $plan['plan_id'] ];
+
+		$body = [
+			'items' => $items
+		];
+
+		try {
+			$subscription = self::$api->createSubscription($params, $body);
+			if( isset( $subscription['code'] ) && $subscription['code'] == 200 ){
+				$subscription = $subscription['data'];
+			}
+		} catch (GerencianetException $e) {
+			return [
+				'code'        => $e->code,
+				'error'       => $e->error,
+				'description' => $e->errorDescription
+			];
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
+
+		// Local Subscription management
+		$newSubscription = new Subscription;
+
+		if ($newSubscription->skipTrial) {
+            $trialEndsAt = null;
+        } else {
+            $trialEndsAt = $newSubscription->trialDays ? Carbon::now()->addDays($newSubscription->trialDays) : null;
+        }
+
+		return $newSubscription->create([
+										// replicated from gerencianet
+								    	"user_id"        	=> $user_id,
+									    "subscription_id" 	=> $subscription['subscription_id'],
+									    "status" 			=> "new",
+									    "notification_url" 	=> null,
+									    "payment_method"	=> null,
+									    "next_execution"	=> null,
+									    "next_expire_at" 	=> null,
+									    "plan_id" 			=> $plan['plan_id'],
+									    "occurrences" 		=> 0,
+									    // local only
+									    'trial_ends_at' => $trialEndsAt,
+			        					'ends_at' 		=> null,
+			        				]);
 
     }
 

@@ -58,11 +58,11 @@ trait SetupTrait
 
             $table->increments('id');
 
-            $table->string('name')->nullable();
+            // $table->string('name')->nullable();
             $table->integer('user_id');
             $table->integer('subscription_id');
             $table->string('status')->default("new");
-            $table->string('custom_id')->nullable();
+            // $table->string('custom_id')->nullable();
             $table->string('notification_url')->nullable();
             $table->string('payment_method')->nullable();
             $table->datetime('next_execution')->nullable();

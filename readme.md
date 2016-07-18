@@ -34,7 +34,7 @@
 - [x] createPlan
 - [x] listPlans
 - [x] deletePlan
-- [ ] createSubscription
+- [x] createSubscription
 - [ ] detailSubscription
 - [ ] updateSubscriptioMetadata
 - [ ] cancelSubscription
