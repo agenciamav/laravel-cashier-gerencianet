@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Cashier\Services;
+namespace AgenciaMav\LaravelCashierGerencianet\Services;
 
 use Exception;
 use Gerencianet\Exception\GerencianetException;

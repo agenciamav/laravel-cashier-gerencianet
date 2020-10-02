@@ -1,11 +1,11 @@
 <?php
 
-namespace Laravel\Cashier;
+namespace AgenciaMav\LaravelCashierGerencianet;
 
 use Exception;
 use InvalidArgumentException;
 use Gerencianet\Exception\GerencianetException;
-use Laravel\Cashier\Services\GerencianetApiService;
+use AgenciaMav\LaravelCashierGerencianet\Services\GerencianetApiService;
 use Carbon\Carbon;
 
 class GerencianetCharge extends GerencianetApiService

@@ -16,23 +16,12 @@
     ],
     "require": {
         "php": "^7.2",
-        "gerencianet/gerencianet-sdk-php": "2.*",
-        "fzaninotto/faker": "^1.6",
-        "ext-intl": "*",
-        "dompdf/dompdf": "^0.8.0",
-        "illuminate/database": "^6.0|^7.0|^8.0",
-        "illuminate/support": "^6.0|^7.0|^8.0",
-        "moneyphp/money": "^3.2",
-        "nesbot/carbon": "^2.0"
-    },
-    "require-dev": {
-        "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^4.0|^5.0|^6.0",
-        "phpunit/phpunit": "^8.0|^9.0",
-        "illuminate/routing": "~5.1",
-        "illuminate/http": "~5.1",
-        "illuminate/view": "~5.1",
-        "vlucas/phpdotenv": "~2.0"
+        "gerencianet/gerencianet-sdk-php": "^2.4",
+        "dompdf/dompdf": "^0.8.6",
+        "illuminate/database": "^8.7",
+        "illuminate/support": "^8.7",
+        "moneyphp/money": "^3.3",
+        "nesbot/carbon": "^2.40"
     },
     "autoload": {
         "psr-4": {
@@ -43,5 +32,14 @@
         "classmap": [
             "tests/Traits/"
         ]
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.4",
+        "orchestra/testbench": "^6.2",
+        "phpunit/phpunit": "^9.4",
+        "illuminate/routing": "^8.7",
+        "illuminate/http": "^8.7",
+        "illuminate/view": "^8.7",
+        "vlucas/phpdotenv": "^5.2"
     }
 }

@@ -1,8 +1,8 @@
 <?php
-namespace Laravel\Cashier;
+namespace AgenciaMav\LaravelCashierGerencianet;
 
 use Exception;
-use Laravel\Cashier\Services\GerencianetApiService;
+use AgenciaMav\LaravelCashierGerencianet\Services\GerencianetApiService;
 
 class GerencianetCarnetService extends GerencianetApiService
 {	

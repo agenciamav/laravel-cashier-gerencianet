@@ -1,13 +1,13 @@
 <?php
 
-namespace Laravel\Cashier;
+namespace AgenciaMav\LaravelCashierGerencianet;
 
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-// use Laravel\Cashier\GerencianetCharge as Charge;
+// use AgenciaMav\LaravelCashierGerencianet\GerencianetCharge as Charge;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable

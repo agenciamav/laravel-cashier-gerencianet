@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Cashier;
+namespace AgenciaMav\LaravelCashierGerencianet;
 
 use Exception;
 

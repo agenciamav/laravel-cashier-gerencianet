@@ -1,10 +1,10 @@
 <?php
 
-namespace Laravel\Cashier;
+namespace AgenciaMav\LaravelCashierGerencianet;
 
 use Gerencianet\Exception\GerencianetException;
 use Exception;
-use Laravel\Cashier\Services\GerencianetApiService;
+use AgenciaMav\LaravelCashierGerencianet\Services\GerencianetApiService;
 
 /**
  * The Subscription model
