@@ -1,7 +1,12 @@
 {
-    "name": "agenciamav/cashier-gerencianet",
+    "name": "agenciamav/laravel-cashier-gerencianet",
     "description": "An expressive, fluent interface to Gerencianet's subscription billing services.",
-    "keywords": ["laravel", "gerencianet", "billing", "cashier"],
+    "keywords": [
+        "laravel",
+        "gerencianet",
+        "billing",
+        "cashier"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -10,26 +15,28 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9",
-        "illuminate/database": "~5.1",
-        "illuminate/support": "~5.1",
-        "gerencianet/gerencianet-sdk-php": "1.*",
-        "dompdf/dompdf": "^0.6.1",
-        "nesbot/carbon": "~1.0",
-        "symfony/http-kernel": "~2.7|~3.0",
-        "fzaninotto/faker": "^1.6"
+        "php": "^7.2",
+        "gerencianet/gerencianet-sdk-php": "2.*",
+        "fzaninotto/faker": "^1.6",
+        "ext-intl": "*",
+        "dompdf/dompdf": "^0.8.0",
+        "illuminate/database": "^6.0|^7.0|^8.0",
+        "illuminate/support": "^6.0|^7.0|^8.0",
+        "moneyphp/money": "^3.2",
+        "nesbot/carbon": "^2.0"
     },
     "require-dev": {
+        "mockery/mockery": "^1.0",
+        "orchestra/testbench": "^4.0|^5.0|^6.0",
+        "phpunit/phpunit": "^8.0|^9.0",
         "illuminate/routing": "~5.1",
         "illuminate/http": "~5.1",
         "illuminate/view": "~5.1",
-        "mockery/mockery": "~0.9",
-        "phpunit/phpunit": "~4.0",
         "vlucas/phpdotenv": "~2.0"
     },
     "autoload": {
         "psr-4": {
-            "Laravel\\Cashier\\": "src/"
+            "Agenciamav\\LaravelCashierGerencianet\\": "src/"
         }
     },
     "autoload-dev": {
