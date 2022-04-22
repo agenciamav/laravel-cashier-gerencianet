@@ -20,8 +20,7 @@ class LaravelCashierGerencianetServiceProvider extends ServiceProvider
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('laravel-cashier-gerencianet.php'),
+            $this->publishes([__DIR__ . '/../config/config.php' => config_path('cashier-gerencianet.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,7 +49,7 @@ class LaravelCashierGerencianetServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-cashier-gerencianet');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'cashier-gerencianet');
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-cashier-gerencianet', function () {

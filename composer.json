@@ -20,9 +20,11 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "gerencianet/gerencianet-sdk-php": "^4.1",
         "illuminate/support": "*"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.19",
         "orchestra/testbench": "^7.0",
         "phpunit/phpunit": "^9.0"
     },
