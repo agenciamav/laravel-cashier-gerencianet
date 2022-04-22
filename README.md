@@ -2,9 +2,9 @@
 
 <p align="center">
   
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/agenciamav/laravel-cashier-gerencianet.svg?style=flat-square)](https://packagist.org/packages/agenciamav/laravel-cashier-gerencianet)
-[![Total Downloads](https://img.shields.io/packagist/dt/agenciamav/laravel-cashier-gerencianet.svg?style=flat-square)](https://packagist.org/packages/agenciamav/laravel-cashier-gerencianet)
-![GitHub Actions](https://github.com/agenciamav/laravel-cashier-gerencianet/actions/workflows/main.yml/badge.svg)
+  [![Latest Version on Packagist](https://img.shields.io/packagist/v/agenciamav/laravel-cashier-gerencianet.svg?style=flat-square)](https://packagist.org/packages/agenciamav/laravel-cashier-gerencianet)
+  [![Total Downloads](https://img.shields.io/packagist/dt/agenciamav/laravel-cashier-gerencianet.svg?style=flat-square)](https://packagist.org/packages/agenciamav/laravel-cashier-gerencianet)
+  ![GitHub Actions](https://github.com/agenciamav/laravel-cashier-gerencianet/actions/workflows/main.yml/badge.svg)
   
 </p>
 
