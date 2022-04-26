@@ -5,6 +5,7 @@ namespace AgenciaMav\LaravelCashierGerencianet\Tests\Feature;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use AgenciaMav\LaravelCashierGerencianet\LaravelCashierGerencianet;
+use AgenciaMav\LaravelCashierGerencianet\LaravelCashierGerencianetServiceProvider;
 use AgenciaMav\LaravelCashierGerencianet\Tests\Fixtures\User;
 
 abstract class FeatureTestCase extends \Orchestra\Testbench\TestCase
@@ -22,8 +23,6 @@ abstract class FeatureTestCase extends \Orchestra\Testbench\TestCase
 
 		$this->faker = \Faker\Factory::create();
 
-		// $this->artisan('migrate:fresh', []);
-
 		parent::setUp();
 	}
 
@@ -32,16 +31,11 @@ abstract class FeatureTestCase extends \Orchestra\Testbench\TestCase
 		// $this->loadLaravelMigrations();
 	}
 
-	protected static function LaravelCashierGerencianet(array $options = []): LaravelCashierGerencianet
+	protected function getPackageProviders($app)
 	{
-		return new LaravelCashierGerencianet(array_merge([
-			'client_id' => getenv('GERENCIANET_CLIENT_ID'),
-			'client_secret' => getenv('GERENCIANET_CLIENT_SECRET'),
-			'pix_cert' => getenv('GERENCIANET_PIX_CERT'),
-			'sandbox' => getenv('GERENCIANET_SANDBOX'),
-			'debug' => getenv('GERENCIANET_DEBUG'),
-			'timeout' => getenv('GERENCIANET_TIMEOUT'),
-		], $options));
+		return [
+			LaravelCashierGerencianetServiceProvider::class,
+		];
 	}
 
 	protected function createCustomer($description = 'Customer', array $options = []): User

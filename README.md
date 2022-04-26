@@ -1,4 +1,4 @@
-<p align="center"><a href="#" ><img src="https://raw.githubusercontent.com/agenciamav/laravel-cashier-gerencianet/master/art/cover.jpg" width="100%"></a></p>
+<p align="center"><a href="https://laravel-cashier-gerencianet.netlify.app/" ><img src="https://raw.githubusercontent.com/agenciamav/laravel-cashier-gerencianet/master/art/cover.jpg" width="100%"></a></p>
 
 <p align="center">
   
@@ -8,37 +8,24 @@
   
 </p>
 
-</p>
+[Documentação](https://laravel-cashier-gerencianet.netlify.app/)
+[App de exemplo](https://github.com/agenciamav/laravel-cashier-gerencianet-example)
 
-Laravel Cashier Gerencianet provides an expressive, fluent interface to [Gerencianet's](https://gerencianet.com.br) subscription billing services. It handles almost all of the boilerplate subscription billing code you are dreading writing. In addition to basic subscription management, Laravel Cashier Gerencianet can handle coupons, swapping subscription, subscription "quantities", cancellation grace periods and much more.
-
-## Installation
-
-You can install the package via composer:
-
-```bash
-composer require agenciamav/laravel-cashier-gerencianet
-```
-
-## Usage
-
-```php
-
-```
-
-### Testing
-
-```bash
-composer test
-```
-
-### Changelog
+## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Testes / Desenvolvimento TDD
+
+No diretório do pacote, execute o comando:
+
+```shell
+$ composer run tests
+```
 
 ### Security
 

@@ -21,14 +21,24 @@ class LaravelCashierGerencianet
      */
     public static function LaravelCashierGerencianet(array $options = [])
     {
-        return new Gerencianet(array_merge([
+        $options = array_merge([
             "client_id" => $options['client_id'] ?? config('cashier-gerencianet.client_id'),
             "client_secret" => $options['client_secret'] ?? config('cashier-gerencianet.client_secret'),
-            "pix_cert" => $options['pix_cert'] ?? config('cashier-gerencianet.pix_cert'),
             "sandbox" => $options['sandbox'] ?? config('cashier-gerencianet.sandbox'),
             "debug" => $options['debug'] ?? config('cashier-gerencianet.debug'),
             "timeout" => $options['timeout'] ?? config('cashier-gerencianet.timeout'),
-        ], $options));
+        ], $options);
+
+        if (isset($options['pix_cert']) && is_string($options['pix_cert'])) {
+            $options["pix_cert"] = $options["pix_cert"];
+        } else 
+        if (config('cashier-gerencianet.pix_cert') && is_string(config('cashier-gerencianet.pix_cert'))) {
+            $options["pix_cert"] = config('cashier-gerencianet.pix_cert');
+        } else {
+            unset($options["pix_cert"]);
+        }
+
+        return new Gerencianet($options);
     }
 
 

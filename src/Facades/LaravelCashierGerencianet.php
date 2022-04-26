@@ -1,13 +1,13 @@
 <?php
 
-namespace AgenciaMav\LaravelCashierGerencianet;
+namespace AgenciaMav\LaravelCashierGerencianet\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \AgenciaMav\LaravelCashierGerencianet\Skeleton\SkeletonClass
  */
-class LaravelCashierGerencianetFacade extends Facade
+class LaravelCashierGerencianet extends Facade
 {
     /**
      * Get the registered name of the component.

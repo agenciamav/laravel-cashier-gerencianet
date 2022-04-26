@@ -2,6 +2,7 @@
 
 namespace AgenciaMav\LaravelCashierGerencianet;
 
+use AgenciaMav\LaravelCashierGerencianet\Http\Controllers\Subscription;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelCashierGerencianetServiceProvider extends ServiceProvider
@@ -15,12 +16,13 @@ class LaravelCashierGerencianetServiceProvider extends ServiceProvider
          * Optional methods to load your package assets
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-cashier-gerencianet');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-cashier-gerencianet');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-cashier-gerencianet');
+        // $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        // $this->loadRoutesFrom(__DIR__ . '/../routes');
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([__DIR__ . '/../config/config.php' => config_path('cashier-gerencianet.php'),
+            $this->publishes([
+                __DIR__ . '/../config/config.php' => config_path('cashier-gerencianet.php'),
             ], 'config');
 
             // Publishing the views.
@@ -53,7 +55,11 @@ class LaravelCashierGerencianetServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-cashier-gerencianet', function () {
-            return new LaravelCashierGerencianet;
+            return new LaravelCashierGerencianet();
+        });
+
+        $this->app->bind('subscription', function ($app) {
+            return new Subscription();
         });
     }
 }
