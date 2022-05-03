@@ -4,6 +4,46 @@ Contributions are **welcome** and will be fully **credited**.
 
 Please read and understand the contribution guide before creating an issue or pull request.
 
+
+## Desenvolvimento TDD
+
+No diretório do pacote, execute o comando:
+
+```shell
+php ./vendor/bin/pest 
+```
+ou
+```shell
+composer run test 
+```
+
+```shell
+λ php .\vendor\bin\pest
+
+   PASS  AgenciaMav\LaravelCashierGerencianet\Tests\Feature\ChargesTest
+  ✓ create tests customer
+  ✓ billet
+  ✓ cancel
+  ✓ create
+  ✓ detail
+  ✓ one step billet
+  ✓ one step billet marketplace
+
+   PASS  AgenciaMav\LaravelCashierGerencianet\Tests\Feature\SubscriptionsTest
+  ✓ create tests customer
+  ✓ cancel subscription
+  ✓ create plan
+  ✓ create subscription
+  ✓ create subscription history
+  ✓ delete plan
+  ✓ detail subscription
+  ✓ get plans
+
+  Tests:  15 passed
+  Time:   141.18s
+```
+
+
 ## Etiquette
 
 This project is open source, and as such, the maintainers give their free time to build and maintain the source code

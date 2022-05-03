@@ -1,16 +1,16 @@
 # Changelog
 
 ### Cobranças
-- [ ] Billet
-- [ ] Cancel
+- [x] Billet
+- [x] Cancel
 - [ ] Card
-- [ ] Create
+- [x] Create
 - [ ] Create Charge Balance Sheet
 - [ ] Create Charge History
-- [ ] Detail
+- [x] Detail
 - [ ] Link
-- [ ] One Step Billet
-- [ ] One Step Billet Marketplace
+- [x] One Step Billet
+- [x] One Step Billet Marketplace
 - [ ] One Step Card
 - [ ] One Step Card Marketplace
 - [ ] Resend Billet
