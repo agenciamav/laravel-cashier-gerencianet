@@ -9,6 +9,7 @@ class ChargesTest extends FeatureTestCase
 {
 
 	protected $charge_id = null;
+	protected $waiting_charge_id = null;
 
 	public function test_create_tests_customer()
 	{
@@ -327,6 +328,10 @@ class ChargesTest extends FeatureTestCase
 
 		$this->assertEquals(200, $response['code']);
 		$this->assertArrayHasKey('data', $response);
+
+		$this->assertEquals("waiting", $response['data']['status']);
+
+		$this->waiting_charge_id = $response['data']['charge_id'];
 	}
 
 
@@ -560,23 +565,20 @@ class ChargesTest extends FeatureTestCase
 	// }
 
 
+	public function test_resendBillet()
+	{
+		if ($this->waiting_charge_id == null) {
+			$this->test_one_step_billet();
+		}
 
+		$body = [
+			'email' => 'oldbuck@gerencianet.com.br'
+		];
 
+		$response = Charge::resendBillet($this->waiting_charge_id, $body);
 
-	// public function test_resendBillet()
-	// {
-	// 	$params = ['id' => 0];
-
-	// 	$body = [
-	// 		'email' => 'oldbuck@gerencianet.com.br'
-	// 	];
-
-
-	// 		$api = new Gerencianet($options);
-	// 		$response = $api->resendBillet($params, $body);
-	// }
-
-
+		$this->assertEquals(200, $response['code']);
+	}
 
 
 	// public function test_settleCharge()

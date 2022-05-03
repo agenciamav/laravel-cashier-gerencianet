@@ -547,20 +547,29 @@ class Charge extends Controller
 		}
 	}
 
-	public function resendBillet()
+	public function resendBillet(int $charge_id, array $body)
 	{
+		$params = Validator::validate(
+			[
+				'id' => intval($charge_id),
+			],
+			[
+				'id' => 'required|integer'
+			]
+		);
 
-		$params = ['id' => 0];
+		$body = Validator::validate(
+			$body,
+			[
+				'email' => 'required|email',
+			]
+		);
 
-		$body = [
-			'email' => 'oldbuck@gerencianet.com.br'
-		];
 
 		try {
-			$api = new Gerencianet($options);
-			$response = $api->resendBillet($params, $body);
+			$response = $this->api->resendBillet($params, $body);
 
-			echo '<pre>' . json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</pre>';
+			return $response;
 		} catch (GerencianetException $e) {
 			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {

@@ -16,7 +16,7 @@
 | One Step Billet Marketplace   |✔|✔     	
 | One Step Card 							  |      	
 | One Step Card Marketplace 	  |      	
-| Resend Billet 							  |      	
+| Resend Billet 							  |✔|✔      	
 | Settle Charge 							  |      	
 | Shipping 										  |      	
 | Update Billet 							  |      	
