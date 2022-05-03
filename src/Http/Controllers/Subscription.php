@@ -28,11 +28,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -55,11 +53,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -89,11 +85,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -126,11 +120,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -157,11 +149,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -187,11 +177,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -215,13 +203,11 @@ class Subscription extends Controller
 		try {
 			$response = $this->api->getPlans($params, []);
 
-			return $response;
+			return collect($response['data']);
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -265,11 +251,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -302,11 +286,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 
@@ -340,11 +322,9 @@ class Subscription extends Controller
 
 			return $response;
 		} catch (GerencianetException $e) {
-			print_r($e->code);
-			print_r($e->error);
-			print_r($e->errorDescription);
+			throw new Exception($e->errorDescription);
 		} catch (Exception $e) {
-			print_r($e->getMessage());
+			throw new Exception($e->getMessage());
 		}
 	}
 }

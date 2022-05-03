@@ -8,4 +8,6 @@ return [
 	"sandbox" => env('GERENCIANET_SANDBOX', true),
 	"debug" => env('GERENCIANET_DEBUG', true),
 	"timeout" => env('GERENCIANET_TIMEOUT', 60),
+
+	"prefix_base" => env('GERENCIANET_PREFIX_BASE', 'laravel-cashier-gerencianet'),
 ];

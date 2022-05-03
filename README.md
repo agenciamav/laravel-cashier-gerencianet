@@ -22,9 +22,41 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## Testes / Desenvolvimento TDD
 
 No diretório do pacote, execute o comando:
+```shell
+php ./vendor/bin/pest 
+```
+ou
+```shell
+composer run test 
+```
 
 ```shell
-$ composer run tests
+λ composer run test
+> vendor/bin/pest
+
+   PASS  AgenciaMav\LaravelCashierGerencianet\Tests\Feature\ChargesTest
+  ✓ customers can be creted
+  ✓ billet
+  ✓ cancel
+  ✓ create
+  ✓ detail
+  ✓ one step billet
+  ✓ one step billet marketplace
+
+   PASS  AgenciaMav\LaravelCashierGerencianet\Tests\Feature\SubscriptionsTest
+  ✓ customers can be creted
+  ✓ cancel subscription
+  ✓ create plan
+  ✓ create subscription
+  ✓ create subscription history
+  ✓ delete plan
+  ✓ detail subscription
+  ✓ get plans
+
+  Tests:  15 passed
+  Time:   142.26s
+
+
 ```
 
 ### Security

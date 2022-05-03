@@ -21,19 +21,18 @@ class LaravelCashierGerencianet
      */
     public static function LaravelCashierGerencianet(array $options = [])
     {
-        $options = array_merge([
-            "client_id" => $options['client_id'] ?? config('cashier-gerencianet.client_id'),
-            "client_secret" => $options['client_secret'] ?? config('cashier-gerencianet.client_secret'),
-            "sandbox" => $options['sandbox'] ?? config('cashier-gerencianet.sandbox'),
-            "debug" => $options['debug'] ?? config('cashier-gerencianet.debug'),
-            "timeout" => $options['timeout'] ?? config('cashier-gerencianet.timeout'),
+        $options = array_merge(["client_id" => $options['client_id'] ?? config('laravel-cashier-gerencianet.client_id'),
+            "client_secret" => $options['client_secret'] ?? config('laravel-cashier-gerencianet.client_secret'),
+            "sandbox" => $options['sandbox'] ?? config('laravel-cashier-gerencianet.sandbox'),
+            "debug" => $options['debug'] ?? config('laravel-cashier-gerencianet.debug'),
+            "timeout" => $options['timeout'] ?? config('laravel-cashier-gerencianet.timeout'),
         ], $options);
 
         if (isset($options['pix_cert']) && is_string($options['pix_cert'])) {
             $options["pix_cert"] = $options["pix_cert"];
         } else 
-        if (config('cashier-gerencianet.pix_cert') && is_string(config('cashier-gerencianet.pix_cert'))) {
-            $options["pix_cert"] = config('cashier-gerencianet.pix_cert');
+        if (config('laravel-cashier-gerencianet.pix_cert') && is_string(config('laravel-cashier-gerencianet.pix_cert'))) {
+            $options["pix_cert"] = config('laravel-cashier-gerencianet.pix_cert');
         } else {
             unset($options["pix_cert"]);
         }

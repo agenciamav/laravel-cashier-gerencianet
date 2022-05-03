@@ -4,6 +4,7 @@ namespace AgenciaMav\LaravelCashierGerencianet\Tests\Feature;
 
 use AgenciaMav\LaravelCashierGerencianet\Facades\Subscription;
 use AgenciaMav\LaravelCashierGerencianet\Tests\Fixtures\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class SubscriptionsTest extends FeatureTestCase
 {
@@ -11,7 +12,7 @@ class SubscriptionsTest extends FeatureTestCase
 	protected $plan_id = null;
 	protected $subscription_id = null;
 
-	public function test_customers_can_be_creted()
+	public function test_create_tests_customer()
 	{
 		$user = $this->createCustomer();
 
@@ -20,7 +21,7 @@ class SubscriptionsTest extends FeatureTestCase
 		$this->assertNotNull($user->name);
 		$this->assertNotNull($user->password);
 	}
-
+	
 	public function test_cancel_subscription()
 	{
 		if (is_null($this->subscription_id)) {
@@ -123,8 +124,6 @@ class SubscriptionsTest extends FeatureTestCase
 		$response = Subscription::getPlans();
 
 		$this->assertNotNull($response);
-		$this->assertEquals(200, $response['code']);
-		$this->assertNotEmpty($response['data']);
 	}
 
 	// public function test_pay_subscription()
